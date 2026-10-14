@@ -19,8 +19,9 @@ export default function PublicLayout() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-10 border-b border-slate-100 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link to="/" className="text-xl font-bold text-ink">
-            Sagala<span className="text-brand-600">Tech</span>
+          <Link to="/" className="flex items-center gap-2 text-xl font-bold text-ink">
+            <img src="/logo.png" alt="" className="h-9 w-auto" />
+            <span>Sagala<span className="text-brand-600">Tech</span></span>
           </Link>
           <nav className="hidden gap-8 md:flex">
             {links.map((l) => (
@@ -50,7 +51,7 @@ export default function PublicLayout() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
           <div>
             <p className="text-lg font-bold text-white">SagalaTech</p>
-            <p className="mt-2 text-sm">Solusi teknologi untuk membantu bisnis Anda tumbuh.</p>
+            <p className="mt-2 text-sm">Penyedia jasa teknologi: CCTV, jaringan, servis laptop, pengadaan barang, dan pembuatan sistem, website, serta aplikasi.</p>
           </div>
           <div className="text-sm">
             <p className="font-semibold text-white">Navigasi</p>

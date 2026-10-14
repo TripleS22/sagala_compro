@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { services } from './Services'
+import { reasons, services } from '@/lib/content'
 import { type Article, formatDate, useFetch } from '@/lib/api'
 
 export default function Home() {
@@ -9,10 +9,10 @@ export default function Home() {
       <section className="bg-gradient-to-b from-brand-50 to-white">
         <div className="mx-auto max-w-6xl px-4 py-24 text-center">
           <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight text-ink md:text-6xl">
-            Teknologi yang membuat bisnis Anda <span className="text-brand-600">melangkah lebih jauh</span>
+            Mitra teknologi untuk <span className="text-brand-600">rumah, usaha, dan instansi</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-            Sagala Tech membangun perangkat lunak, website, dan sistem digital yang andal untuk perusahaan dari berbagai skala.
+            Pemasangan CCTV, konfigurasi jaringan, servis laptop, pengadaan barang, hingga pembuatan sistem, website, dan aplikasi, semua dalam satu tempat.
           </p>
           <div className="mt-8 flex justify-center gap-3">
             <Link to="/kontak" className="rounded-lg bg-brand-600 px-6 py-3 font-medium text-white hover:bg-brand-700">
@@ -26,12 +26,30 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <h2 className="text-2xl font-bold text-ink">Layanan Kami</h2>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {services.slice(0, 3).map((s) => (
+        <div className="flex items-end justify-between">
+          <h2 className="text-2xl font-bold text-ink">Layanan Kami</h2>
+          <Link to="/layanan" className="text-sm font-medium text-brand-600">Semua layanan →</Link>
+        </div>
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {services.map(({ icon: Icon, ...s }) => (
             <div key={s.title} className="rounded-xl border border-slate-200 p-6">
-              <h3 className="font-semibold text-ink">{s.title}</h3>
+              <span className="inline-flex size-11 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                <Icon className="size-6" />
+              </span>
+              <h3 className="mt-4 font-semibold text-ink">{s.title}</h3>
               <p className="mt-2 text-sm">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-brand-600 text-white">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-3">
+          {reasons.map(({ icon: Icon, ...r }) => (
+            <div key={r.title}>
+              <Icon className="size-8 text-brand-100" />
+              <h3 className="mt-3 font-semibold">{r.title}</h3>
+              <p className="mt-1 text-sm text-brand-100">{r.desc}</p>
             </div>
           ))}
         </div>

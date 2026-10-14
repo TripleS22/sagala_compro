@@ -25,7 +25,8 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-xl bg-white p-8 shadow">
-        <h1 className="text-xl font-bold text-ink">Masuk Admin</h1>
+        <img src="/logo.png" alt="Sagala Tech" className="mx-auto h-14 w-auto" />
+        <h1 className="text-center text-xl font-bold text-ink">Masuk Admin</h1>
         <Field label="Username" name="username" required autoComplete="username" />
         <Field label="Password" name="password" type="password" required autoComplete="current-password" />
         {error && <Alert>{error}</Alert>}

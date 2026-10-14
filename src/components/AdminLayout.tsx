@@ -21,7 +21,7 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-slate-50 md:flex">
       <aside className="border-b border-slate-200 bg-white p-4 md:min-h-screen md:w-60 md:border-r md:border-b-0">
-        <p className="mb-4 text-lg font-bold text-ink">Admin <span className="text-brand-600">Panel</span></p>
+        <p className="mb-4 flex items-center gap-2 text-lg font-bold text-ink"><img src="/logo.png" alt="" className="h-7 w-auto" />Admin <span className="text-brand-600">Panel</span></p>
         <nav className="flex gap-1 md:flex-col">
           <NavLink to="/admin" end className={cls}>Artikel</NavLink>
           <NavLink to="/admin/kontak" className={cls}>Info Kontak</NavLink>
