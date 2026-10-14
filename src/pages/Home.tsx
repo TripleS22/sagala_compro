@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Silk from '@/components/Silk'
 import { reasons, services } from '@/lib/content'
 import { type Article, formatDate, useFetch } from '@/lib/api'
 
@@ -6,19 +7,21 @@ export default function Home() {
   const { data } = useFetch<Article[]>('/articles')
   return (
     <>
-      <section className="bg-gradient-to-b from-brand-50 to-white">
-        <div className="mx-auto max-w-6xl px-4 py-24 text-center">
-          <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight text-ink md:text-6xl">
-            Mitra teknologi untuk <span className="text-brand-600">rumah, usaha, dan instansi</span>
+      <section className="relative isolate overflow-hidden bg-brand-700 text-white">
+        <Silk color="#0a6cae" sheenColor="#9fd4f5" speed={3} scale={1.1} noiseIntensity={1.2} className="absolute! inset-0 -z-10" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/10 to-brand-700/60" />
+        <div className="mx-auto max-w-6xl px-4 py-28 text-center md:py-36">
+          <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
+            Mitra teknologi untuk <span className="text-sky-200">rumah, usaha, dan instansi</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">
             Pemasangan CCTV, konfigurasi jaringan, servis perangkat keras, pengadaan barang, hingga pembuatan sistem, website, dan aplikasi, semua dalam satu tempat.
           </p>
           <div className="mt-8 flex justify-center gap-3">
-            <Link to="/kontak" className="rounded-lg bg-brand-600 px-6 py-3 font-medium text-white hover:bg-brand-700">
+            <Link to="/kontak" className="rounded-lg bg-white px-6 py-3 font-medium text-brand-700 hover:bg-brand-50">
               Hubungi Kami
             </Link>
-            <Link to="/layanan" className="rounded-lg border border-slate-300 px-6 py-3 font-medium hover:bg-white">
+            <Link to="/layanan" className="rounded-lg border border-white/50 px-6 py-3 font-medium text-white hover:bg-white/10">
               Lihat Layanan
             </Link>
           </div>
