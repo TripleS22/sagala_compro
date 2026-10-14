@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Silk from '@/components/Silk'
+import TechText from '@/components/TechText'
 import { reasons, services } from '@/lib/content'
 import { type Article, formatDate, useFetch } from '@/lib/api'
 
@@ -10,11 +11,26 @@ export default function Home() {
       <section className="relative isolate overflow-hidden bg-brand-700 text-white">
         <Silk color="#0a6cae" sheenColor="#9fd4f5" speed={3} scale={1.1} noiseIntensity={1.2} className="absolute! inset-0 -z-10" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/10 to-brand-700/60" />
-        <div className="mx-auto max-w-6xl px-4 py-28 text-center md:py-36">
-          <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-            Mitra teknologi untuk <span className="text-sky-200">rumah, usaha, dan instansi</span>
+        <div className="mx-auto max-w-6xl px-4 py-20 text-center md:py-28">
+          <h1>
+            <span className="sr-only">Sagala Tech</span>
+            <TechText
+              text="SAGALA TECH"
+              fontWeight={800}
+              fontSize={150}
+              letterSpacing={0.02}
+              color="#ffffff"
+              accentColor="#bae6fd"
+              reach={160}
+              dashLength={5}
+              dashGap={3}
+              className="mx-auto h-32 max-w-4xl sm:h-44 md:h-56"
+            />
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">
+          <p className="mx-auto mt-2 max-w-2xl text-xl font-semibold text-sky-200 md:text-2xl">
+            Mitra teknologi untuk rumah, usaha, dan instansi
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-white/85 md:text-lg">
             Pemasangan CCTV, konfigurasi jaringan, servis perangkat keras, pengadaan barang, hingga pembuatan sistem, website, dan aplikasi, semua dalam satu tempat.
           </p>
           <div className="mt-8 flex justify-center gap-3">
