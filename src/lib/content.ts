@@ -1,4 +1,4 @@
-import { Cctv, Code, Headset, Laptop, Network, PackageCheck, ShieldCheck, Wrench, Handshake } from 'lucide-react'
+import { Cctv, Code, Cpu, Headset, Network, PackageCheck, ShieldCheck, Wrench, Handshake } from 'lucide-react'
 
 export const services = [
   {
@@ -14,10 +14,10 @@ export const services = [
     points: ['Instalasi kabel LAN & access point', 'Konfigurasi router/firewall/VLAN', 'Troubleshooting jaringan'],
   },
   {
-    icon: Laptop,
-    title: 'Servis Laptop',
-    desc: 'Perbaikan laptop dan komputer: hardware, sistem operasi, upgrade performa, dan pembersihan.',
-    points: ['Ganti layar, baterai, keyboard', 'Upgrade RAM & SSD', 'Instal ulang & pemulihan data'],
+    icon: Cpu,
+    title: 'Servis Perangkat Keras',
+    desc: 'Perbaikan dan perawatan perangkat keras: laptop, komputer, dan perangkat pendukung lainnya.',
+    points: ['Diagnosa & perbaikan kerusakan hardware', 'Ganti komponen & upgrade RAM/SSD', 'Pembersihan dan perawatan berkala'],
   },
   {
     icon: PackageCheck,

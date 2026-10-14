@@ -4,7 +4,7 @@ export default function About() {
       <h1 className="text-3xl font-bold text-ink">Tentang Sagala Tech</h1>
       <p className="mt-6 leading-relaxed">
         Sagala Tech adalah perusahaan yang bergerak di bidang penyediaan jasa teknologi. Kami melayani pemasangan CCTV, konfigurasi
-        jaringan, servis laptop, pengadaan barang, serta pembuatan sistem, website, dan aplikasi, juga kebutuhan teknologi lainnya
+        jaringan, servis perangkat keras, pengadaan barang, serta pembuatan sistem, website, dan aplikasi, juga kebutuhan teknologi lainnya
         untuk rumah tangga, usaha, dan instansi.
       </p>
       <p className="mt-4 leading-relaxed">

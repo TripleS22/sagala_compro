@@ -51,7 +51,7 @@ export default function PublicLayout() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
           <div>
             <p className="text-lg font-bold text-white">SagalaTech</p>
-            <p className="mt-2 text-sm">Penyedia jasa teknologi: CCTV, jaringan, servis laptop, pengadaan barang, dan pembuatan sistem, website, serta aplikasi.</p>
+            <p className="mt-2 text-sm">Penyedia jasa teknologi: CCTV, jaringan, servis perangkat keras, pengadaan barang, dan pembuatan sistem, website, serta aplikasi.</p>
           </div>
           <div className="text-sm">
             <p className="font-semibold text-white">Navigasi</p>

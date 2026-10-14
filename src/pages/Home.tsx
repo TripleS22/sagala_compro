@@ -12,7 +12,7 @@ export default function Home() {
             Mitra teknologi untuk <span className="text-brand-600">rumah, usaha, dan instansi</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-            Pemasangan CCTV, konfigurasi jaringan, servis laptop, pengadaan barang, hingga pembuatan sistem, website, dan aplikasi, semua dalam satu tempat.
+            Pemasangan CCTV, konfigurasi jaringan, servis perangkat keras, pengadaan barang, hingga pembuatan sistem, website, dan aplikasi, semua dalam satu tempat.
           </p>
           <div className="mt-8 flex justify-center gap-3">
             <Link to="/kontak" className="rounded-lg bg-brand-600 px-6 py-3 font-medium text-white hover:bg-brand-700">
