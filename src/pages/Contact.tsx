@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react'
+import PageHeader from '@/components/PageHeader'
 import { Alert, Button, Field } from '@/components/ui'
 import { type ContactInfo, send, useFetch } from '@/lib/api'
 
@@ -25,10 +26,10 @@ export default function Contact() {
 
   const wa = info?.whatsapp.replace(/\D/g, '')
   return (
+    <>
+    <PageHeader no="05" label="Kontak" title="Hubungi kami">Ceritakan kebutuhan Anda, tim kami akan membalas secepatnya.</PageHeader>
     <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 md:grid-cols-2">
       <div>
-        <h1 className="text-3xl font-bold text-ink">Hubungi Kami</h1>
-        <p className="mt-2">Ceritakan kebutuhan Anda, tim kami akan membalas secepatnya.</p>
         <dl className="mt-8 space-y-4 text-sm">
           {info?.email && <Row label="Email"><a href={`mailto:${info.email}`}>{info.email}</a></Row>}
           {info?.phone && <Row label="Telepon"><a href={`tel:${info.phone}`}>{info.phone}</a></Row>}
@@ -40,7 +41,7 @@ export default function Contact() {
           )}
         </dl>
       </div>
-      <form onSubmit={submit} className="space-y-4 rounded-xl border border-slate-200 p-6">
+      <form onSubmit={submit} className="space-y-4 border border-slate-200 p-6">
         <Field label="Nama" name="name" required minLength={2} maxLength={100} />
         <Field label="Email" name="email" type="email" required />
         <Field label="Subjek" name="subject" maxLength={200} />
@@ -50,13 +51,14 @@ export default function Contact() {
         <Button disabled={busy} className="w-full">{busy ? 'Mengirim…' : 'Kirim Pesan'}</Button>
       </form>
     </div>
+    </>
   )
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="font-semibold text-ink">{label}</dt>
+      <dt className="font-mono text-xs tracking-widest text-slate-500 uppercase">{label}</dt>
       <dd className="text-brand-700">{children}</dd>
     </div>
   )

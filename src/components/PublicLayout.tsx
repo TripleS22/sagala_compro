@@ -17,7 +17,7 @@ export default function PublicLayout() {
     `text-sm font-medium ${isActive ? 'text-brand-600' : 'text-slate-600 hover:text-ink'}`
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b border-slate-100 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2 text-xl font-bold text-ink">
             <img src="/logo.png" alt="" className="h-9 w-auto" />
@@ -47,7 +47,7 @@ export default function PublicLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="bg-ink text-slate-300">
+      <footer className="border-t border-white/10 bg-night text-slate-300">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
           <div>
             <p className="text-lg font-bold text-white">SagalaTech</p>

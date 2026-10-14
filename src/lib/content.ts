@@ -44,3 +44,10 @@ export const reasons = [
   { icon: ShieldCheck, title: 'Pengerjaan rapi & bergaransi', desc: 'Instalasi dan perbaikan dikerjakan sesuai standar dengan garansi layanan.' },
   { icon: Handshake, title: 'Solusi sesuai kebutuhan', desc: 'Kami mulai dari memahami masalah Anda, bukan sekadar menjual produk.' },
 ]
+
+export const steps = [
+  { title: 'Konsultasi', desc: 'Kami dengarkan kebutuhan dan kondisi lokasi atau sistem Anda.' },
+  { title: 'Survei & penawaran', desc: 'Survei bila perlu, lalu penawaran yang jelas: lingkup, waktu, dan biaya.' },
+  { title: 'Pengerjaan', desc: 'Instalasi, konfigurasi, atau pengembangan dikerjakan rapi dan terdokumentasi.' },
+  { title: 'Serah terima & dukungan', desc: 'Uji bersama, penjelasan penggunaan, dan dukungan teknis setelahnya.' },
+]
