@@ -2,9 +2,13 @@
 
 Website company profile dengan panel admin untuk mengelola artikel, info kontak, dan pesan masuk.
 
-**Stack:** React + Vite + Tailwind (frontend) · Express + SQLite (API) · login admin berbasis cookie httpOnly (JWT).
+**Stack:** React + Vite + Tailwind (frontend) · Express + SQLite bawaan Node (`node:sqlite`, tanpa kompilasi) · login admin berbasis cookie httpOnly (JWT).
+
+**Syarat:** Node.js **22.13 atau lebih baru** (disarankan 22 LTS atau 24). Tidak perlu Python/Visual Studio Build Tools.
 
 ## Pengembangan
+
+Windows PowerShell: bila muncul "running scripts is disabled", jalankan sekali `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
 ```bash
 npm install

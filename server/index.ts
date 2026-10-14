@@ -8,7 +8,7 @@ import helmet from 'helmet'
 import multer from 'multer'
 import { z } from 'zod'
 import { COOKIE, cookieOptions, ensureAdmin, requireAdmin, signToken } from './auth.ts'
-import { CATEGORIES, CONTACT_KEYS, db } from './db.ts'
+import { CATEGORIES, CONTACT_KEYS, db, transaction } from './db.ts'
 import { GithubError, type GithubRepo, getRepo, listPublicRepos, parseRepo } from './github.ts'
 
 ensureAdmin()
@@ -201,9 +201,9 @@ admin.put('/contact-info', (req, res) => {
   const upsert = db.prepare(
     'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
   )
-  db.transaction(() => {
+  transaction(() => {
     for (const k of CONTACT_KEYS) upsert.run(k, d[k])
-  })()
+  })
   res.json({ ok: true })
 })
 
@@ -254,11 +254,11 @@ admin.get('/projects/:id', (req, res) => {
 })
 
 function saveProject(id: number | null, d: z.infer<typeof projectSchema>) {
-  let repoFields: Record<string, unknown> = { repo: null, repo_url: null, stars: 0, pushed_at: null }
+  let repoFields: { repo: string | null; repo_url: string | null } = { repo: null, repo_url: null }
   if (d.repo) {
     const full = parseRepo(d.repo)
     if (!full) throw new GithubError('Format repo harus owner/nama-repo', 400)
-    repoFields = { ...repoFields, repo: full, repo_url: `https://github.com/${full}` }
+    repoFields = { repo: full, repo_url: `https://github.com/${full}` }
   }
   const demo = d.demo_url || null
   if (id === null) {

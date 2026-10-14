@@ -1,13 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import Database from 'better-sqlite3'
+import { DatabaseSync } from 'node:sqlite'
 
 const dataDir = path.resolve(process.env.DATA_DIR ?? 'data')
 fs.mkdirSync(dataDir, { recursive: true })
 
-export const db = new Database(path.join(dataDir, 'sagala.db'))
-db.pragma('journal_mode = WAL')
-db.pragma('foreign_keys = ON')
+export const db = new DatabaseSync(path.join(dataDir, 'sagala.db'))
+db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;')
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS admins (
@@ -69,3 +68,16 @@ const defaults: Record<string, string> = {
 }
 const seed = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)')
 for (const [k, v] of Object.entries(defaults)) seed.run(k, v)
+
+/** Jalankan fn dalam satu transaksi; rollback bila fn melempar galat. */
+export function transaction<T>(fn: () => T): T {
+  db.exec('BEGIN')
+  try {
+    const result = fn()
+    db.exec('COMMIT')
+    return result
+  } catch (e) {
+    db.exec('ROLLBACK')
+    throw e
+  }
+}
