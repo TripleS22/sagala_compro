@@ -51,3 +51,13 @@ export const steps = [
   { title: 'Pengerjaan', desc: 'Instalasi, konfigurasi, atau pengembangan dikerjakan rapi dan terdokumentasi.' },
   { title: 'Serah terima & dukungan', desc: 'Uji bersama, penjelasan penggunaan, dan dukungan teknis setelahnya.' },
 ]
+
+export const categories: Record<string, string> = {
+  sistem: 'Sistem & Aplikasi',
+  website: 'Website',
+  cctv: 'CCTV',
+  jaringan: 'Jaringan',
+  perangkat: 'Perangkat Keras',
+  pengadaan: 'Pengadaan',
+  lainnya: 'Lainnya',
+}

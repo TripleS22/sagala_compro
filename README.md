@@ -15,6 +15,14 @@ npm run dev            # web :5173, api :3001
 
 Admin: http://localhost:5173/admin/login — akun dibuat otomatis dari `ADMIN_USERNAME`/`ADMIN_PASSWORD` saat server pertama kali jalan.
 
+## Galeri proyek
+
+Admin → **Proyek**: tambah proyek manual (CCTV, jaringan, dll.) atau **Impor dari GitHub** untuk proyek sistem.
+- Hanya repo **publik** milik `GITHUB_USERNAME` (bukan fork/arsip) yang muncul; repo privat ditolak server.
+- Hasil impor berstatus **draf**. Lengkapi ringkasan/gambar/demo, lalu terbitkan.
+- **Sinkron GitHub** memperbarui bintang dan tanggal push. Judul dan ringkasan yang Anda sunting tidak ditimpa.
+  Repo yang berubah menjadi privat atau dihapus otomatis disembunyikan dari website.
+
 ## Deploy ke VPS
 
 ```bash

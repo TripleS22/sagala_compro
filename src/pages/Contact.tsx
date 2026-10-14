@@ -28,7 +28,7 @@ export default function Contact() {
   const wa = info ? toWhatsAppNumber(info.whatsapp) : null
   return (
     <>
-    <PageHeader no="05" label="Kontak" title="Hubungi kami">Ceritakan kebutuhan Anda, tim kami akan membalas secepatnya.</PageHeader>
+    <PageHeader no="04" label="Kontak" title="Hubungi kami">Ceritakan kebutuhan Anda, tim kami akan membalas secepatnya.</PageHeader>
     <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 md:grid-cols-2">
       <div>
         <dl className="mt-8 space-y-4 text-sm">

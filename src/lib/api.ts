@@ -46,6 +46,22 @@ export interface Message {
   created_at: string
 }
 
+export interface Project {
+  id: number
+  title: string
+  category: string
+  summary: string
+  image: string | null
+  tags: string[]
+  repo: string | null
+  repo_url: string | null
+  demo_url: string | null
+  stars: number
+  pushed_at: string | null
+  published: number
+  sort_order: number
+}
+
 export const formatDate = (s: string) =>
   new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
 

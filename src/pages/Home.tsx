@@ -5,7 +5,8 @@ import Eyebrow from '@/components/Eyebrow'
 import Magnet from '@/components/Magnet'
 import Reveal from '@/components/Reveal'
 import ServiceGrid from '@/components/ServiceGrid'
-import { type Article, formatDate, useFetch } from '@/lib/api'
+import ProjectCard from '@/components/ProjectCard'
+import { type Article, type Project, formatDate, useFetch } from '@/lib/api'
 import { reasons, steps } from '@/lib/content'
 
 // Komponen WebGL/canvas dimuat terpisah agar konten teks tampil lebih dulu
@@ -15,6 +16,7 @@ const LetterGlitch = lazy(() => import('@/components/LetterGlitch'))
 
 export default function Home() {
   const { data } = useFetch<Article[]>('/articles')
+  const { data: projects } = useFetch<Project[]>('/projects')
   return (
     <>
       {/* Hero */}
@@ -79,12 +81,36 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Proyek */}
+      {projects && projects.length > 0 && (
+        <section className="border-t border-slate-200 bg-slate-50">
+          <div className="mx-auto max-w-6xl px-4 py-24">
+            <Reveal className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <Eyebrow no="02">Proyek</Eyebrow>
+                <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">Hasil kerja nyata, bukan sekadar janji</h2>
+              </div>
+              <Link to="/proyek" className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 hover:underline">
+                Semua proyek <ArrowUpRight className="size-4" />
+              </Link>
+            </Reveal>
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {projects.slice(0, 3).map((p, i) => (
+                <Reveal key={p.id} delay={i * 0.08} distance={20}>
+                  <ProjectCard project={p} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Cara kerja */}
       <section className="relative isolate overflow-hidden bg-night text-white">
         <div className="bg-grid absolute inset-0 -z-10" />
         <div className="mx-auto max-w-6xl px-4 py-24">
           <Reveal>
-            <Eyebrow no="02" dark>Cara kerja</Eyebrow>
+            <Eyebrow no="03" dark>Cara kerja</Eyebrow>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-tight md:text-4xl">Proses yang jelas dari awal sampai akhir</h2>
           </Reveal>
           <ol className="mt-14 grid gap-10 md:grid-cols-4 md:gap-0">
@@ -107,7 +133,7 @@ export default function Home() {
       {/* Mengapa */}
       <section className="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-5">
         <Reveal className="md:col-span-2">
-          <Eyebrow no="03">Mengapa Sagala Tech</Eyebrow>
+          <Eyebrow no="04">Mengapa Sagala Tech</Eyebrow>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">Teknologi yang menyelesaikan masalah di lapangan</h2>
         </Reveal>
         <div className="md:col-span-3">
@@ -131,7 +157,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-4 py-24">
             <Reveal className="flex items-end justify-between gap-4">
               <div>
-                <Eyebrow no="04">Artikel</Eyebrow>
+                <Eyebrow no="05">Artikel</Eyebrow>
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">Catatan terbaru</h2>
               </div>
               <Link to="/artikel" className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 hover:underline">

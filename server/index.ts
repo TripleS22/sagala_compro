@@ -8,7 +8,8 @@ import helmet from 'helmet'
 import multer from 'multer'
 import { z } from 'zod'
 import { COOKIE, cookieOptions, ensureAdmin, requireAdmin, signToken } from './auth.ts'
-import { CONTACT_KEYS, db } from './db.ts'
+import { CATEGORIES, CONTACT_KEYS, db } from './db.ts'
+import { GithubError, type GithubRepo, getRepo, listPublicRepos, parseRepo } from './github.ts'
 
 ensureAdmin()
 
@@ -68,6 +69,21 @@ api.get('/articles/:slug', (req, res) => {
   const row = db.prepare('SELECT * FROM articles WHERE slug = ? AND published = 1').get(req.params.slug)
   if (!row) return void res.status(404).json({ error: 'Artikel tidak ditemukan' })
   res.json(row)
+})
+
+interface ProjectRow {
+  id: number
+  tags: string
+  published: number
+  [k: string]: unknown
+}
+const toProject = (r: ProjectRow) => ({ ...r, tags: JSON.parse(r.tags) as string[] })
+
+api.get('/projects', (_req, res) => {
+  const rows = db
+    .prepare('SELECT * FROM projects WHERE published = 1 ORDER BY sort_order ASC, created_at DESC')
+    .all() as ProjectRow[]
+  res.json(rows.map(toProject))
 })
 
 api.get('/contact-info', (_req, res) => {
@@ -204,6 +220,164 @@ admin.delete('/messages/:id', (req, res) => {
   res.json({ ok: true })
 })
 
+const projectSchema = z.object({
+  title: z.string().trim().min(2).max(150),
+  category: z.enum(CATEGORIES).default('sistem'),
+  summary: z.string().trim().max(600).default(''),
+  image: z.string().max(300).nullable().default(null),
+  tags: z.array(z.string().trim().min(1).max(30)).max(8).default([]),
+  repo: z.string().nullable().default(null),
+  demo_url: z
+    .string()
+    .trim()
+    .max(300)
+    .regex(/^https?:\/\/\S+$/i, 'Harus diawali http:// atau https://')
+    .nullable()
+    .or(z.literal(''))
+    .default(null),
+  published: z.boolean().default(false),
+  sort_order: z.number().int().default(0),
+})
+
+const repoTags = (r: GithubRepo) => [...new Set([r.language, ...r.topics].filter((t): t is string => !!t))].slice(0, 8)
+const safeUrl = (u?: string | null) => (u && /^https?:\/\//i.test(u) ? u : null)
+
+admin.get('/projects', (_req, res) => {
+  const rows = db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, created_at DESC').all() as ProjectRow[]
+  res.json(rows.map(toProject))
+})
+
+admin.get('/projects/:id', (req, res) => {
+  const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id) as ProjectRow | undefined
+  if (!row) return void res.status(404).json({ error: 'Proyek tidak ditemukan' })
+  res.json(toProject(row))
+})
+
+function saveProject(id: number | null, d: z.infer<typeof projectSchema>) {
+  let repoFields: Record<string, unknown> = { repo: null, repo_url: null, stars: 0, pushed_at: null }
+  if (d.repo) {
+    const full = parseRepo(d.repo)
+    if (!full) throw new GithubError('Format repo harus owner/nama-repo', 400)
+    repoFields = { ...repoFields, repo: full, repo_url: `https://github.com/${full}` }
+  }
+  const demo = d.demo_url || null
+  if (id === null) {
+    return db
+      .prepare(
+        `INSERT INTO projects (title, category, summary, image, tags, repo, repo_url, demo_url, published, sort_order)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(d.title, d.category, d.summary, d.image, JSON.stringify(d.tags), repoFields.repo, repoFields.repo_url, demo, d.published ? 1 : 0, d.sort_order)
+      .lastInsertRowid
+  }
+  // data GitHub (bintang, push terakhir) dipertahankan; hanya diperbarui lewat sinkronisasi
+  db.prepare(
+    `UPDATE projects SET title=?, category=?, summary=?, image=?, tags=?, repo=?, repo_url=?, demo_url=?, published=?, sort_order=?,
+       stars = CASE WHEN ? IS NULL THEN 0 ELSE stars END, pushed_at = CASE WHEN ? IS NULL THEN NULL ELSE pushed_at END
+     WHERE id=?`,
+  ).run(d.title, d.category, d.summary, d.image, JSON.stringify(d.tags), repoFields.repo, repoFields.repo_url, demo, d.published ? 1 : 0, d.sort_order, repoFields.repo, repoFields.repo, id)
+  return id
+}
+
+admin.post('/projects', (req, res) => {
+  const id = saveProject(null, validate(projectSchema, req.body))
+  res.status(201).json({ id })
+})
+admin.put('/projects/:id', (req, res) => {
+  const id = Number(req.params.id)
+  if (!db.prepare('SELECT 1 FROM projects WHERE id = ?').get(id)) return void res.status(404).json({ error: 'Proyek tidak ditemukan' })
+  saveProject(id, validate(projectSchema, req.body))
+  res.json({ ok: true })
+})
+admin.delete('/projects/:id', (req, res) => {
+  db.prepare('DELETE FROM projects WHERE id = ?').run(req.params.id)
+  res.json({ ok: true })
+})
+
+// ---- GitHub ----
+const githubUser = () => process.env.GITHUB_USERNAME ?? 'TripleS22'
+
+/** Daftar repo publik milik akun (bukan fork/arsip) beserta status sudah diimpor atau belum. */
+admin.get('/github/repos', async (_req, res) => {
+  const repos = await listPublicRepos(githubUser())
+  const imported = new Set((db.prepare('SELECT repo FROM projects WHERE repo IS NOT NULL').all() as { repo: string }[]).map((r) => r.repo.toLowerCase()))
+  res.json({
+    username: githubUser(),
+    repos: repos.map((r) => ({
+      full_name: r.full_name,
+      description: r.description,
+      language: r.language,
+      stars: r.stargazers_count,
+      pushed_at: r.pushed_at,
+      imported: imported.has(r.full_name.toLowerCase()),
+    })),
+  })
+})
+
+/** Data satu repo untuk mengisi formulir (tanpa menyimpan). */
+admin.get('/github/repo', async (req, res) => {
+  const full = parseRepo(String(req.query.name ?? ''))
+  if (!full) throw new GithubError('Format repo harus owner/nama-repo', 400)
+  const r = await getRepo(full)
+  res.json({
+    repo: r.full_name,
+    title: r.name.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    summary: r.description ?? '',
+    tags: repoTags(r),
+    demo_url: safeUrl(r.homepage),
+    stars: r.stargazers_count,
+  })
+})
+
+const importSchema = z.object({ repos: z.array(z.string()).min(1).max(30) })
+/** Impor beberapa repo sebagai proyek berstatus DRAF; admin meninjau sebelum diterbitkan. */
+admin.post('/github/import', async (req, res) => {
+  const { repos } = validate(importSchema, req.body)
+  const done: string[] = []
+  const failed: { repo: string; error: string }[] = []
+  const insert = db.prepare(
+    `INSERT OR IGNORE INTO projects (title, category, summary, tags, repo, repo_url, demo_url, stars, pushed_at, published)
+     VALUES (?, 'sistem', ?, ?, ?, ?, ?, ?, ?, 0)`,
+  )
+  for (const input of repos) {
+    const full = parseRepo(input)
+    if (!full) {
+      failed.push({ repo: input, error: 'Format tidak valid' })
+      continue
+    }
+    try {
+      const r = await getRepo(full)
+      const title = r.name.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+      const info = insert.run(title, r.description ?? '', JSON.stringify(repoTags(r)), r.full_name, r.html_url, safeUrl(r.homepage), r.stargazers_count, r.pushed_at)
+      if (info.changes) done.push(full)
+      else failed.push({ repo: full, error: 'Sudah diimpor' })
+    } catch (e) {
+      failed.push({ repo: full, error: e instanceof GithubError ? e.message : 'Gagal' })
+    }
+  }
+  res.json({ imported: done, failed })
+})
+
+/** Perbarui bintang, tanggal push, dan teknologi dari GitHub; judul/ringkasan hasil suntingan admin tidak ditimpa. */
+admin.post('/github/sync', async (_req, res) => {
+  const rows = db.prepare('SELECT id, repo, tags FROM projects WHERE repo IS NOT NULL').all() as { id: number; repo: string; tags: string }[]
+  const update = db.prepare('UPDATE projects SET stars = ?, pushed_at = ?, repo_url = ? WHERE id = ?')
+  let updated = 0
+  const failed: { repo: string; error: string }[] = []
+  for (const row of rows) {
+    try {
+      const r = await getRepo(row.repo)
+      update.run(r.stargazers_count, r.pushed_at, r.html_url, row.id)
+      updated++
+    } catch (e) {
+      failed.push({ repo: row.repo, error: e instanceof GithubError ? e.message : 'Gagal' })
+      // repo yang berubah menjadi privat langsung disembunyikan dari publik
+      if (e instanceof GithubError && (e.status === 400 || e.status === 404)) db.prepare('UPDATE projects SET published = 0 WHERE id = ?').run(row.id)
+    }
+  }
+  res.json({ updated, failed })
+})
+
 const imageTypes: Record<string, string> = {
   'image/jpeg': '.jpg',
   'image/png': '.png',
@@ -239,6 +413,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   if (err instanceof z.ZodError) {
     return void res.status(400).json({ error: 'Data tidak valid', details: err.flatten().fieldErrors })
   }
+  if (err instanceof GithubError) return void res.status(err.status === 502 ? 502 : err.status).json({ error: err.message })
   if (err instanceof multer.MulterError) return void res.status(400).json({ error: err.message })
   console.error(err)
   res.status(500).json({ error: 'Terjadi kesalahan server' })

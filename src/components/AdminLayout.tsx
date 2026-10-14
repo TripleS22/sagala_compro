@@ -24,6 +24,7 @@ export default function AdminLayout() {
         <p className="mb-4 flex items-center gap-2 text-lg font-bold text-ink"><img src="/logo.png" alt="" className="h-7 w-auto" />Admin <span className="text-brand-600">Panel</span></p>
         <nav className="flex gap-1 md:flex-col">
           <NavLink to="/admin" end className={cls}>Artikel</NavLink>
+          <NavLink to="/admin/proyek" className={cls}>Proyek</NavLink>
           <NavLink to="/admin/kontak" className={cls}>Info Kontak</NavLink>
           <NavLink to="/admin/pesan" className={cls}>Pesan Masuk</NavLink>
         </nav>

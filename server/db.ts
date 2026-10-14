@@ -26,6 +26,22 @@ CREATE TABLE IF NOT EXISTS articles (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+CREATE TABLE IF NOT EXISTS projects (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'sistem',
+  summary TEXT NOT NULL DEFAULT '',
+  image TEXT,
+  tags TEXT NOT NULL DEFAULT '[]',
+  repo TEXT UNIQUE,
+  repo_url TEXT,
+  demo_url TEXT,
+  stars INTEGER NOT NULL DEFAULT 0,
+  pushed_at TEXT,
+  published INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL DEFAULT ''
@@ -41,6 +57,7 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 `)
 
+export const CATEGORIES = ['sistem', 'website', 'cctv', 'jaringan', 'perangkat', 'pengadaan', 'lainnya'] as const
 export const CONTACT_KEYS = ['email', 'phone', 'whatsapp', 'address', 'hours', 'maps_url'] as const
 const defaults: Record<string, string> = {
   email: 'halo@sagalatech.id',

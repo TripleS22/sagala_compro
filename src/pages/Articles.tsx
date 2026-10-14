@@ -7,7 +7,7 @@ export default function Articles() {
   const { data, loading, error } = useFetch<Article[]>('/articles')
   return (
     <>
-      <PageHeader no="04" label="Artikel" title="Catatan dan wawasan teknologi" />
+      <PageHeader no="03" label="Artikel" title="Catatan dan wawasan teknologi" />
       <div className="mx-auto max-w-6xl px-4 py-16">
         {loading && <Loading />}
         {error && <p className="text-red-600">{error}</p>}
