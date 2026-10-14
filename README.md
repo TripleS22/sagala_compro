@@ -1,32 +1,31 @@
-# React + TypeScript + Vite
+# Sagala Tech — Company Profile
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Website company profile dengan panel admin untuk mengelola artikel, info kontak, dan pesan masuk.
 
-Currently, two official plugins are available:
+**Stack:** React + Vite + Tailwind (frontend) · Express + SQLite (API) · login admin berbasis cookie httpOnly (JWT).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Pengembangan
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+cp .env.example .env   # isi ADMIN_PASSWORD
+export $(grep -v '^#' .env | xargs)
+npm run dev            # web :5173, api :3001
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Admin: http://localhost:5173/admin/login — akun dibuat otomatis dari `ADMIN_USERNAME`/`ADMIN_PASSWORD` saat server pertama kali jalan.
+
+## Deploy ke VPS
+
+```bash
+git clone <repo> /var/www/sagala_compro && cd /var/www/sagala_compro
+npm ci && npm run build
+cp .env.example .env && nano .env        # JWT_SECRET (openssl rand -hex 32), ADMIN_PASSWORD
+sudo cp deploy/sagalatech.service /etc/systemd/system/
+sudo chown -R www-data . && sudo systemctl enable --now sagalatech
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/sagalatech   # lalu symlink ke sites-enabled
+sudo certbot --nginx -d domainanda.com
+```
+
+Satu proses Node melayani API, gambar upload, dan frontend hasil build. Data ada di `data/sagala.db` dan `uploads/` — **cadangkan kedua folder ini**.
+Setelah admin pertama terbuat, `ADMIN_PASSWORD` boleh dihapus dari `.env`.

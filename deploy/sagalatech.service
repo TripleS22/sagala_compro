@@ -1,0 +1,13 @@
+[Unit]
+Description=Sagala Tech company profile
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/sagala_compro
+EnvironmentFile=/var/www/sagala_compro/.env
+ExecStart=/usr/bin/npm start
+Restart=always
+User=www-data
+
+[Install]
+WantedBy=multi-user.target
