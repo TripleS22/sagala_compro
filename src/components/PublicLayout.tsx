@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import WhatsAppButton from '@/components/WhatsAppButton'
 import { type ContactInfo, useFetch } from '@/lib/api'
 
 const links = [
@@ -74,6 +75,7 @@ export default function PublicLayout() {
           © {new Date().getFullYear()} Sagala Tech. Seluruh hak cipta dilindungi.
         </p>
       </footer>
+      <WhatsAppButton number={info?.whatsapp} />
     </div>
   )
 }

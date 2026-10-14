@@ -2,6 +2,7 @@ import { type FormEvent, useState } from 'react'
 import PageHeader from '@/components/PageHeader'
 import { Alert, Button, Field } from '@/components/ui'
 import { type ContactInfo, send, useFetch } from '@/lib/api'
+import { toWhatsAppNumber } from '@/lib/whatsapp'
 
 export default function Contact() {
   const { data: info } = useFetch<ContactInfo>('/contact-info')
@@ -24,7 +25,7 @@ export default function Contact() {
     }
   }
 
-  const wa = info?.whatsapp.replace(/\D/g, '')
+  const wa = info ? toWhatsAppNumber(info.whatsapp) : null
   return (
     <>
     <PageHeader no="05" label="Kontak" title="Hubungi kami">Ceritakan kebutuhan Anda, tim kami akan membalas secepatnya.</PageHeader>
