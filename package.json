@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n web,api \"vite\" \"tsx watch server/index.ts\"",
+    "dev": "concurrently -n web,api \"vite\" \"npm:dev:api\"",
     "build": "tsc -b && tsc -p tsconfig.server.json && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "dev:web": "vite",
-    "dev:api": "tsx watch server/index.ts",
-    "start": "NODE_ENV=production tsx server/index.ts"
+    "dev:api": "tsx watch --env-file-if-exists=.env server/index.ts",
+    "start": "NODE_ENV=production tsx --env-file-if-exists=.env server/index.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

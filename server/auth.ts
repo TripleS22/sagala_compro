@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { db } from './db.ts'
 
 const isProd = process.env.NODE_ENV === 'production'
-const secret = process.env.JWT_SECRET ?? (isProd ? '' : 'dev-only-secret')
+const secret = process.env.JWT_SECRET || (isProd ? '' : 'dev-only-secret')
 if (!secret) throw new Error('JWT_SECRET wajib diisi di production')
 
 export const COOKIE = 'sagala_admin'

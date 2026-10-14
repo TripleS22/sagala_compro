@@ -8,8 +8,7 @@ Website company profile dengan panel admin untuk mengelola artikel, info kontak,
 
 ```bash
 npm install
-cp .env.example .env   # isi ADMIN_PASSWORD
-export $(grep -v '^#' .env | xargs)
+cp .env.example .env   # isi ADMIN_PASSWORD (file .env dibaca otomatis)
 npm run dev            # web :5173, api :3001
 ```
 
